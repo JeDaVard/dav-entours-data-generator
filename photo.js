@@ -7,7 +7,7 @@ class Photo {
     constructor(awsConfig, bucket, pathName, ids) {
         this.pathName = pathName;
         this.path = path.join(__dirname, pathName);
-        this.ids = JSON.parse(fs.readFileSync(ids));
+        this.ids = JSON.parse(fs.readFileSync(ids, 'utf8'));
         this.awsConfig = awsConfig;
         this.Bucket = bucket;
     }

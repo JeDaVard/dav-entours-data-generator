@@ -2,60 +2,52 @@ const GenerateIds = require('./idGenerator');
 const fs = require('fs');
 const { awsOptions } = require('./config')
 const Photo = require('./photo');
+const { userGen } = require('./user');
 
+
+//////////// Generate users for your need \\\\\\\\\\\\\\
+// User Photos
 const manPhotos = new Photo(awsOptions, 'entours', 'data/users/m', 'data/users/manIds.json');
 const womanPhotos = new Photo(awsOptions, 'entours', 'data/users/g', 'data/users/womanIds.json');
 
-let file = fs.readFileSync('data/users/users.json')
-let parsedFile = JSON.parse(file);
+// Raw users
+let parsedMix = JSON.parse(fs.readFileSync('data/users/mixUsers.json', 'utf8'));
 
-let mix = fs.readFileSync('data/users/mixUsers.json')
-let parsedMix = JSON.parse(mix);
+// Ids
+let menIds = JSON.parse(fs.readFileSync('data/users/manIds.json', 'utf8'));
+let womanIds = JSON.parse(fs.readFileSync('data/users/WomanIds.json', 'utf8'));
 
-let rawMenIds = fs.readFileSync('data/users/manIds.json')
-let menIds = JSON.parse(rawMenIds);
+// Users by gender
+let men = userGen(parsedMix, menIds, 'Male', manPhotos);
+let women = userGen(parsedMix, womanIds, 'Female', womanPhotos)
 
-let rawWomenIds = fs.readFileSync('data/users/WomanIds.json')
-let womanIds = JSON.parse(rawWomenIds);
+// Total tours
+const tours = JSON.parse(fs.readFileSync('data/tours/tourIds.json', 'utf8'))
+let userTours = [...tours];
 
-const men = parsedMix
-    .filter(u => u.gender === 'Male')
-    .slice(0, 232)
-    .map((u, index) => ({
-        _id: menIds[index],
-        name: u.first_name + ' ' + u.last_name,
-        gender: u.gender,
-        email: u.email,
-        photo: `users/${menIds[index]}/avatar/${manPhotos.readDir(true)[index]}`,
-        reviews: [],
-        tours: [],
-        role: 'user',
-        active: true,
-        speaks: [ 'English' ],
-        password: '$2b$12$3WeOSwigC2ADLbw.boW62eD52Xr2JZRNk3OyHtp1v6kObsFgHwFNa'.slice(0, menIds[index].length) + menIds[index]
-    }))
+// Users ready to deploy
+const totalUsers = [...men, ...women]
+    .sort((a, b) => a.name.split(' ')[1] > b.name.split(' ')[1] ? 1 : -1)
+    .map((u, i) => {
+        switch (true) {
+            case i < 10:
+                return {...u, tours: userTours.splice(0, 4)};
+            case i < 20:
+                return {...u, tours: userTours.splice(0, 3)};
+            case i < 40:
+                return {...u, tours: userTours.splice(0, 2)};
+            case i < 130:
+                return {...u, tours: userTours.splice(0, 1)};
+            default:
+                return u
+        }
+    })
+// fs.writeFileSync('data/users/users.json', JSON.stringify(totalUsers))
+///////////////////////////
 
-const women = parsedMix
-    .filter(u => u.gender === 'Female')
-    .slice(0, 232)
-    .map((u, index) => ({
-        _id: menIds[index],
-        name: u.first_name + ' ' + u.last_name,
-        gender: u.gender,
-        email: u.email,
-        photo: `users/${menIds[index]}/avatar/${womanPhotos.readDir(true)[index]}`,
-        reviews: [],
-        tours: [],
-        role: 'user',
-        active: true,
-        speaks: [ 'English' ],
-        password: '$2b$12$3WeOSwigC2ADLbw.boW62eD52Xr2JZRNk3OyHtp1v6kObsFgHwFNa'.slice(0, menIds[index].length) + menIds[index]
-    }))
+let users = JSON.parse(fs.readFileSync('data/users/users.json', 'utf8'));
 
-const totalUsers = [...men, ...women].sort((a, b) => a.name.split(' ')[1] > b.name.split(' ')[1] ? 1 : -1)
-
-console.log(totalUsers)
-fs.writeFileSync('data/users/users.json', JSON.stringify(totalUsers))
+console.log(users)
 
 //\\//\\ GENERATE IDS FOR YOUR NEED \\//\\//
 // const genIds = new GenerateIds(undefined, 6);
