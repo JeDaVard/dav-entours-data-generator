@@ -1,0 +1,19 @@
+{
+  "name": "devdata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dev.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.731.0",
+    "dotenv": "^8.2.0",
+    "faker": "^4.1.0",
+    "mongoose": "^5.9.28",
+    "uuid": "^8.3.0"
+  }
+}
