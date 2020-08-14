@@ -67,23 +67,23 @@ const totalUsers = [...men, ...women]
     .map((u, i) => {
         switch (true) {
             case i >= 390:
-                return {...u, reviews: userReviews.splice(0, 11)};
+                return {...u, reviews: userReviews.splice(0, 11).map(r => r._id)};
             case i >= 350:
-                return {...u, reviews: userReviews.splice(0, 9)};
+                return {...u, reviews: userReviews.splice(0, 9).map(r => r._id)};
             case i >= 320:
-                return {...u, reviews: userReviews.splice(0, 8)};
+                return {...u, reviews: userReviews.splice(0, 8).map(r => r._id)};
             case i >= 280:
-                return {...u, reviews: userReviews.splice(0, 7)};
+                return {...u, reviews: userReviews.splice(0, 7).map(r => r._id)};
             case i >= 250:
-                return {...u, reviews: userReviews.splice(0, 6)};
+                return {...u, reviews: userReviews.splice(0, 6).map(r => r._id)};
             case i >= 220:
-                return {...u, reviews: userReviews.splice(0, 5)};
+                return {...u, reviews: userReviews.splice(0, 5).map(r => r._id)};
             case i >= 190:
-                return {...u, reviews: userReviews.splice(0, 4)};
+                return {...u, reviews: userReviews.splice(0, 4).map(r => r._id)};
             case i >= 160:
-                return {...u, reviews: userReviews.splice(0, 3)};
+                return {...u, reviews: userReviews.splice(0, 3).map(r => r._id)};
             case i >= 130:
-                return {...u, reviews: userReviews.splice(0, 2)};
+                return {...u, reviews: userReviews.splice(0, 2).map(r => r._id)};
             default:
                 return u
         }
