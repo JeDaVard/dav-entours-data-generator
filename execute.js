@@ -47,7 +47,7 @@ const locations = JSON.parse(fs.readFileSync('data/locations/locations.json', 'u
 // console.log(locs)
 
 async function locConfig() {
-
+    const locs = locations.map(l => l.m)
 }
 
 async function getShortWiki(keyword) {
