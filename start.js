@@ -1,13 +1,13 @@
 const fs = require('fs');
 
-const startIds = JSON.parse(fs.readFileSync('data/starts/startIds.json', 'utf8'));
+const startIds = JSON.parse(fs.readFileSync('data/starts/starts.json', 'utf8'));
 
-const totalStarts = startIds.map(_id => {
+const totalStarts = startIds.map(({_id, tour, participants, date }) => {
     return {
         _id,
-        tour: null,
-        participants: [],
-        date: null,
+        tour,
+        participants,
+        date,
         ended: false,
     }
 })
