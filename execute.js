@@ -20,7 +20,9 @@ const { totalTours } = require('./tour')
 
 // console.log(totalUsers)
 // console.log(totalReviews)
-console.log(totalTours)
+console.log(totalTours.map(t => t.locations.map(l => l.address)).slice(100))
+// console.log(totalTours.map(t => t.locations.map(l => l.address))[150])
+// console.log(totalTours.map(t => t.locations.map(l => l.address))[128])
 // console.log(totalStarts)
 
 ///////////////////////////
