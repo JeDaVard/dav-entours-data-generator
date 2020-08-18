@@ -30,13 +30,6 @@ const tourSchema = new mongoose.Schema(
             unique: true
         },
         hashtags: [String],
-        participants: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'User',
-                // unique: [true, 'You can\'t participate twice at a same time, please, choose another date or invite the second participant']
-            }
-        ],
         firstMessage: {
             type: String,
         },
@@ -84,12 +77,6 @@ const tourSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
-        starts: [
-            {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: 'Start'
-            }
-        ],
         startLocation: {
             // GeoJSON
             type: {
@@ -146,8 +133,8 @@ const tourSchema = new mongoose.Schema(
 // tourSchema.index({ price: 1, ratingsAverage: -1 });
 tourSchema.index({ slug: 1 });
 tourSchema.index({ startLocation: '2dsphere' });
-tourSchema.index({ locations: '2dsphere' });
-tourSchema.index({ starts: 1 });
+// tourSchema.index({ locations: '2dsphere' });
+// tourSchema.index({ starts: 1 });
 
 // tourSchema.pre(/^find/, function (next) {
 //     // "populate" means when we request it finds each guide by ObjectId located in the 'guides' array
@@ -179,13 +166,11 @@ tourSchema.index({ starts: 1 });
 
 tourSchema.pre('save', function (next) {
     if (this.locations.length) {
-        this.startLocation = this.locations[0]
+        const { type, day, coordinates, address, description } = this.locations[0];
+        this.startLocation = { type, day, coordinates, address, description }
         return next();
     }
-
-    if (this.draft && !this.startLocation.coordinates && !this.locations.length) {
-        this.startLocation = undefined
-    }
+    this.startLocation = null;
     next();
 })
 

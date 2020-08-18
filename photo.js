@@ -7,12 +7,12 @@ class Photo {
     constructor(awsConfig, bucket, pathName, ids) {
         this.pathName = pathName;
         this.path = path.join(__dirname, pathName);
-        this.ids = JSON.parse(fs.readFileSync(ids, 'utf8'));
+        this.ids = ids ? JSON.parse(fs.readFileSync(ids, 'utf8')) : null;
         this.awsConfig = awsConfig;
         this.Bucket = bucket;
     }
     readDir(isAwsVersion) {
-        let names = fs.readdirSync(this.path)
+        let names = fs.readdirSync(this.path).filter(file => !file.includes('ds_store') && !file.startsWith('.'))
             .filter(l => !l.toLowerCase().includes('ds_store'));
 
         return isAwsVersion ? names.map(l => {
@@ -29,15 +29,37 @@ class Photo {
             fs.renameSync(`${this.path}/${a}`, `${this.path}/${uuid()}${ext.toLowerCase()}`);
         })
     }
-    async uploadS3() {
+     async uploadS3() {
+        const s3 = new AWS.S3(this.awsConfig)
+        const names = this.readDir()
+            .sort((a, b) => {
+            const aa = a.split('.')[0].split('_')[0] + a.split('.')[0].split('_')[1]
+            const bb = b.split('.')[0].split('_')[0] + b.split('.')[0].split('_')[1]
+            return Number(aa) - Number(bb)
+        })
+        return Promise.all(names.map((fileName, index) => {
+            const Body = fs.readFileSync(`${this.pathName}/${fileName.split('/').slice(-1)}`);
+            const Key = this.ids[index];
+            const ext = fileName.match(/\.([^.]*)$/)[1].toLowerCase();
+            const ContentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
+
+            return new Promise((resolve, reject) => {
+                s3.putObject({ Bucket: this.Bucket, Key, Body, ContentType}, function(err, res) {
+                    if (err) { console.log(err); reject(err)}
+                    console.log(res);
+                    resolve(res)
+                })
+            })
+        }))
+    }
+    async uploadS3Ava() {
         const s3 = new AWS.S3(this.awsConfig)
         const names = this.readDir();
         return Promise.all(names.map((fileName, index) => {
             const Body = fs.readFileSync(`${this.pathName}/${fileName}`);
             const Key = `users/${this.ids[index]}/avatar/${fileName}`;
-            const ContentType = `image/${fileName.match(/\.([^.]*)$/)[1].toLowerCase()}`;
-
-            if (ContentType === 'image/ds_store') return;
+            const ext = fileName.match(/\.([^.]*)$/)[1].toLowerCase();
+            const ContentType = `image/${ext === 'jpg' ? 'jpeg' : ext}`;
 
             return new Promise((resolve, reject) => {
                 s3.putObject({ Bucket: this.Bucket, Key, Body, ContentType}, function(err, res) {

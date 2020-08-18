@@ -10,6 +10,7 @@ const difficulty = ['easy', 'easy', 'easy', 'easy', 'easy', 'easy', 'easy', 'med
 const locations = JSON.parse(fs.readFileSync('data/locations/locations.json', 'utf8'));
 const names = JSON.parse(fs.readFileSync('data/tours/names.json', 'utf8'));
 const days = [1, 1, 2, 2, 2, 3, 3, 4];
+const images = JSON.parse(fs.readFileSync('data/tours/images.json', 'utf8'));
 
 const tourIds = JSON.parse(fs.readFileSync('data/tours/tourIds.json', 'utf8'));
 const totalTours = tourIds.map((_id, index) => {
@@ -22,8 +23,8 @@ const totalTours = tourIds.map((_id, index) => {
         summary: names[index].summary,
         description: names[index].description,
         firstMessage: 'Hello 👋️! I am the author of this tour. Here we\'ve done our best for you to enjoy your time with us, and you to be happy with your choice. Hope you like it and after the tour ends, please, don\'t forget to write a positive review ❤️ ',
-        imageCover: null,
-        images: [],
+        imageCover: images.find(image => image.tourId === _id).imageCover,
+        images: images.find(image => image.tourId === _id).images,
         price: prices[Math.floor((Math.random() * prices.length))],
         locations: locations[index].data.map(loc => ({
             day: days[Math.floor(Math.random() * days.length)],
@@ -45,27 +46,38 @@ module.exports = {
 
 
 
-// const userIds = JSON.parse(fs.readFileSync('data/starts/startIds.json', 'utf8'));
-//
-// function shuffle(array) {
-//     var currentIndex = array.length, temporaryValue, randomIndex;
-//
-//     // While there remain elements to shuffle...
-//     while (0 !== currentIndex) {
-//
-//         // Pick a remaining element...
-//         randomIndex = Math.floor(Math.random() * currentIndex);
-//         currentIndex -= 1;
-//
-//         // And swap it with the current element.
-//         temporaryValue = array[currentIndex];
-//         array[currentIndex] = array[randomIndex];
-//         array[randomIndex] = temporaryValue;
-//     }
-//
-//     return array;
-// }
-//
+const userIds = totalUsers.map(u => u._id)
+
+function shuffle(array) {
+    var currentIndex = array.length, temporaryValue, randomIndex;
+
+    // While there remain elements to shuffle...
+    while (0 !== currentIndex) {
+
+        // Pick a remaining element...
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex -= 1;
+
+        // And swap it with the current element.
+        temporaryValue = array[currentIndex];
+        array[currentIndex] = array[randomIndex];
+        array[randomIndex] = temporaryValue;
+    }
+
+    return array;
+}
+
+// _________________
+// const startIds = JSON.parse(fs.readFileSync('data/starts/starts2.json', 'utf8'));
+// let arr = [];
+// const startA = startIds.forEach(s => {
+//     arr = [...arr, ...s.startId]
+// })
+// fs.writeFileSync('data/starts/starts3.json', JSON.stringify(arr))
+// _________________
+
+// const startIds = JSON.parse(fs.readFileSync('data/starts/startsWithTours.json', 'utf8'))
+// // console.log(startIds)
 // const tourStart = () => {
 //     const sss = startIds.map(({tourId, startId}, mainIndex) => {
 //         let shuffled = shuffle([...userIds.slice(81, userIds.length)]);
@@ -134,7 +146,7 @@ module.exports = {
 //             })
 //         }
 //     })
-// fs.writeFileSync('data/starts/startsWithTours.json', JSON.stringify(sss))
+//     fs.writeFileSync('data/starts/starts2.json', JSON.stringify(sss))
 // }
-//
+
 // tourStart()
