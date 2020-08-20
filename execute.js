@@ -34,26 +34,7 @@ mongoose.connect(mongoURI, {
         //     process.exit();
         // })
         //     .catch(e => { console.log('Import error',e ); process.exit()});
-
-
-        // return User.findOne({_id: '5f3239cfb642804b75c676d9'})
-
-        // async function f() {
-        //     const tour = await Tour.findOne({slug: '3024d1-savannah-experience-start-georgia-discovery'})
-        //     const starts = await Start.find({tour: tour._id})
-        //     console.log(starts.map(s => s.participants))
-        //     console.log(starts.length)
-        // }
-        // f()
-        // let reviews = JSON.parse(fs.readFileSync('data/reviews/reviews.json', 'utf8'));
-        //
-        // importUsers(Review, reviews).then(() => {
-        //     console.log('Import Done!')
-        //     process.exit();
-        // }).catch(e => { console.log('Import error',e ); process.exit()});
     })
-    // .then(console.log)
-    // .then(_ => process.exit())
     .catch(e => console.log(e))
 
 // console.log(totalUsers)
