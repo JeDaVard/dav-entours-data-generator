@@ -26,14 +26,13 @@ mongoose.connect(mongoURI, {
         // Conversation.deleteMany().then(_ => console.log('deleted all'))
         ///////////////////////////
         // IMPORT DATA
-        // let starts = JSON.parse(fs.readFileSync('data/starts/starts.json', 'utf8'));
-        //
-        // importUsers(Start, starts)
-        //     .then(() => {
-        //     console.log('Import Done!')
-        //     process.exit();
-        // })
-        //     .catch(e => { console.log('Import error',e ); process.exit()});
+        let exReviews = JSON.parse(fs.readFileSync('data/reviews/exReviews.json', 'utf8'));
+        importUsers(Review, exReviews)
+            .then(() => {
+            console.log('Import Done!')
+            process.exit();
+        })
+            .catch(e => { console.log('Import error',e ); process.exit()});
     })
     .catch(e => console.log(e))
 
