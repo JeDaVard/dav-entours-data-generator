@@ -21,6 +21,7 @@ mongoose.connect(mongoURI, {
 }).then(() => console.log('DB connected...'))
     .then(_ => {
         // Start.deleteMany().then(_ => console.log('deleted all'))
+        // Conversation.deleteMany().then(_ => console.log('deleted all'))
         // Order.deleteMany().then(_ => console.log('deleted all'))
         // Message.deleteMany().then(_ => console.log('deleted all'))
         // Conversation.deleteMany().then(_ => console.log('deleted all'))
