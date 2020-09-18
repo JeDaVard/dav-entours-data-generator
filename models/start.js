@@ -70,7 +70,7 @@ startSchema.pre('save', async function (next) {
     const isConvExist = await Conversation.findOne({start: this._id})
     if (!isConvExist) {
         const tour = await Tour.findById(this.tour)
-        const conversation = await Conversation.create({start: tour._id, tour})
+        const conversation = await Conversation.create({start: this._id, tour})
         await Message.create({
             conversation: conversation._id,
             text: tour.firstMessage,
